@@ -22,11 +22,11 @@ import {clippingMaskUniformValues} from './program/clipping_mask_program';
 import {Color} from '@maplibre/maplibre-gl-style-spec';
 import {drawSymbols} from './draw_symbol';
 import {drawCircles} from './draw_circle';
-import {drawHeatmap} from './draw_heatmap';
+// import {drawHeatmap} from './draw_heatmap';
 import {drawLine} from './draw_line';
 import {drawFill} from './draw_fill';
 import {drawFillExtrusion} from './draw_fill_extrusion';
-import {drawHillshade} from './draw_hillshade';
+// import {drawHillshade} from './draw_hillshade';
 import {drawRaster} from './draw_raster';
 import {drawBackground} from './draw_background';
 import {drawDebug, drawDebugPadding, selectDebugSource} from './draw_debug';
@@ -480,9 +480,7 @@ export class Painter {
             case 'circle':
                 drawCircles(painter, sourceCache, layer as any, coords);
                 break;
-            case 'heatmap':
-                drawHeatmap(painter, sourceCache, layer as any, coords);
-                break;
+
             case 'line':
                 drawLine(painter, sourceCache, layer as any, coords);
                 break;
@@ -492,9 +490,7 @@ export class Painter {
             case 'fill-extrusion':
                 drawFillExtrusion(painter, sourceCache, layer as any, coords);
                 break;
-            case 'hillshade':
-                drawHillshade(painter, sourceCache, layer as any, coords);
-                break;
+
             case 'raster':
                 drawRaster(painter, sourceCache, layer as any, coords);
                 break;
