@@ -2,7 +2,7 @@ import {Painter} from './painter';
 import {Tile} from '../source/tile';
 import {Color} from '@maplibre/maplibre-gl-style-spec';
 import {OverscaledTileID} from '../source/tile_id';
-import {drawTerrain} from './draw_terrain';
+// import {drawTerrain} from './draw_terrain';
 import {Style} from '../style/style';
 import {Terrain} from './terrain';
 import {RenderPool} from '../gl/render_pool';
@@ -17,7 +17,7 @@ const LAYERS: { [keyof in StyleLayer['type']]?: boolean } = {
     fill: true,
     line: true,
     raster: true,
-    hillshade: true
+    hillshade: false
 };
 
 /**
@@ -153,7 +153,7 @@ export class RenderToTexture {
             for (const tile of this._renderableTiles) {
                 // if render pool is full draw current tiles to screen and free pool
                 if (this.pool.isFull()) {
-                    drawTerrain(this.painter, this.terrain, this._rttTiles);
+                    // drawTerrain(this.painter, this.terrain, this._rttTiles);
                     this._rttTiles = [];
                     this.pool.freeAllObjects();
                 }
@@ -184,7 +184,7 @@ export class RenderToTexture {
                     if (layer.source) tile.rttCoords[layer.source] = this._coordsDescendingInvStr[layer.source][tile.tileID.key];
                 }
             }
-            drawTerrain(this.painter, this.terrain, this._rttTiles);
+            // drawTerrain(this.painter, this.terrain, this._rttTiles);
             this._rttTiles = [];
             this.pool.freeAllObjects();
 

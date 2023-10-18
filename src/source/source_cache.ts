@@ -285,7 +285,7 @@ export class SourceCache extends Evented {
         tile.timeAdded = browser.now();
         if (previousState === 'expired') tile.refreshedUponExpiration = true;
         this._setTileReloadTimer(id, tile);
-        if (this.getSource().type === 'raster-dem' && tile.dem) this._backfillDEM(tile);
+        // if (this.getSource().type === 'raster-dem' && tile.dem) this._backfillDEM(tile);
         this._state.initializeTileState(tile, this.map ? this.map.painter : null);
 
         if (!tile.aborted) {
@@ -327,8 +327,7 @@ export class SourceCache extends Evented {
                     dx -= dim;
                 }
             }
-            if (!borderTile.dem || !tile.dem) return;
-            tile.dem.backfillBorder(borderTile.dem, dx, dy);
+            if (!borderTile.dem) return;
             if (tile.neighboringTiles && tile.neighboringTiles[borderId])
                 tile.neighboringTiles[borderId].backfilled = true;
         }

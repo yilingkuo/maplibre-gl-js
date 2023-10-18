@@ -67,31 +67,8 @@ function drawCoords(painter: Painter, terrain: Terrain) {
     context.viewport.set([0, 0, painter.width, painter.height]);
 }
 
-function drawTerrain(painter: Painter, terrain: Terrain, tiles: Array<Tile>) {
-    const context = painter.context;
-    const gl = context.gl;
-    const colorMode = painter.colorModeForRenderPass();
-    const depthMode = new DepthMode(gl.LEQUAL, DepthMode.ReadWrite, painter.depthRangeFor3D);
-    const program = painter.useProgram('terrain');
-    const mesh = terrain.getTerrainMesh();
-
-    context.bindFramebuffer.set(null);
-    context.viewport.set([0, 0, painter.width, painter.height]);
-
-    for (const tile of tiles) {
-        const texture = painter.renderToTexture.getTexture(tile);
-        const terrainData = terrain.getTerrainData(tile.tileID);
-        context.activeTexture.set(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, texture.texture);
-        const posMatrix = painter.transform.calculatePosMatrix(tile.tileID.toUnwrapped());
-        const uniformValues = terrainUniformValues(posMatrix, terrain.getMeshFrameDelta(painter.transform.zoom));
-        program.draw(context, gl.TRIANGLES, depthMode, StencilMode.disabled, colorMode, CullFaceMode.backCCW, uniformValues, terrainData, 'terrain', mesh.vertexBuffer, mesh.indexBuffer, mesh.segments);
-    }
-
-}
-
 export {
-    drawTerrain,
+    // drawTerrain,
     drawDepth,
     drawCoords
 };

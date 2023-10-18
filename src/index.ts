@@ -28,7 +28,7 @@ import type {Cancelable} from './types/cancelable';
 import {GeoJSONSource} from './source/geojson_source';
 import {CanvasSource} from './source/canvas_source';
 import {ImageSource} from './source/image_source';
-import {RasterDEMTileSource} from './source/raster_dem_tile_source';
+// import {RasterDEMTileSource} from './source/raster_dem_tile_source';
 import {RasterTileSource} from './source/raster_tile_source';
 import {VectorTileSource} from './source/vector_tile_source';
 import {VideoSource} from './source/video_source';
@@ -64,7 +64,7 @@ class MapLibreGL {
     static CanvasSource = CanvasSource;
     static GeoJSONSource = GeoJSONSource;
     static ImageSource = ImageSource;
-    static RasterDEMTileSource = RasterDEMTileSource;
+    // static RasterDEMTileSource = RasterDEMTileSource;
     static RasterTileSource = RasterTileSource;
     static VectorTileSource = VectorTileSource;
     static VideoSource = VideoSource;

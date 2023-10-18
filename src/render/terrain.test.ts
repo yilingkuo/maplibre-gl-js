@@ -7,7 +7,7 @@ import {Texture} from './texture';
 import type {SourceCache} from '../source/source_cache';
 import {OverscaledTileID} from '../source/tile_id';
 import type {TerrainSpecification} from '@maplibre/maplibre-gl-style-spec';
-import type {DEMData} from '../data/dem_data';
+// import type {DEMData} from '../data/dem_data';
 import {Tile} from '../source/tile';
 import {Painter} from './painter';
 import {mat4} from 'gl-matrix';
@@ -53,12 +53,7 @@ describe('Terrain', () => {
     test('Calculate tile minimum and maximum elevation', () => {
         const tileID = new OverscaledTileID(5, 0, 5, 17, 11);
         const tile = new Tile(tileID, 256);
-        tile.dem = {
-            min: 0,
-            max: 100,
-            getPixels: () => new RGBAImage({width: 1, height: 1}, new Uint8Array(1 * 4)),
-            getUnpackVector: () => [6553.6, 25.6, 0.1, 10000.0],
-        } as any as DEMData;
+
         const painter = {
             context: new Context(gl(1, 1) as any),
             width: 1,
@@ -113,7 +108,6 @@ describe('Terrain', () => {
     test('Return null elevation values when no DEM', () => {
         const tileID = new OverscaledTileID(5, 0, 5, 17, 11);
         const tile = new Tile(tileID, 256);
-        tile.dem = null as any as DEMData;
         const painter = {
             context: new Context(gl(1, 1) as any),
             width: 1,

@@ -5,7 +5,6 @@ import {collisionUniforms, collisionCircleUniforms} from './collision_program';
 import {debugUniforms} from './debug_program';
 import {clippingMaskUniforms} from './clipping_mask_program';
 import {heatmapUniforms, heatmapTextureUniforms} from './heatmap_program';
-import {hillshadeUniforms, hillshadePrepareUniforms} from './hillshade_program';
 import {lineUniforms, lineGradientUniforms, linePatternUniforms, lineSDFUniforms} from './line_program';
 import {rasterUniforms} from './raster_program';
 import {symbolIconUniforms, symbolSDFUniforms, symbolTextAndIconUniforms} from './symbol_program';
@@ -26,8 +25,6 @@ export const programUniforms = {
     clippingMask: clippingMaskUniforms,
     heatmap: heatmapUniforms,
     heatmapTexture: heatmapTextureUniforms,
-    hillshade: hillshadeUniforms,
-    hillshadePrepare: hillshadePrepareUniforms,
     line: lineUniforms,
     lineGradient: lineGradientUniforms,
     linePattern: linePatternUniforms,

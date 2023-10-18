@@ -8,7 +8,7 @@ import {
     UniformMatrix4f,
     Uniform4f
 } from '../uniform_binding';
-import {EXTENT} from '../../data/extent';
+// import {EXTENT} from '../../data/extent';
 import {MercatorCoordinate} from '../../geo/mercator_coordinate';
 
 import type {Context} from '../../gl/context';
@@ -16,7 +16,7 @@ import type {UniformValues, UniformLocations} from '../uniform_binding';
 import type {Tile} from '../../source/tile';
 import type {Painter} from '../painter';
 import type {HillshadeStyleLayer} from '../../style/style_layer/hillshade_style_layer';
-import type {DEMData} from '../../data/dem_data';
+// import type {DEMData} from '../../data/dem_data';
 import type {OverscaledTileID} from '../../source/tile_id';
 
 export type HillshadeUniformsType = {
@@ -82,22 +82,7 @@ const hillshadeUniformValues = (
     };
 };
 
-const hillshadeUniformPrepareValues = (tileID: OverscaledTileID, dem: DEMData): UniformValues<HillshadePrepareUniformsType> => {
 
-    const stride = dem.stride;
-    const matrix = mat4.create();
-    // Flip rendering at y axis.
-    mat4.ortho(matrix, 0, EXTENT, -EXTENT, 0, 0, 1);
-    mat4.translate(matrix, matrix, [0, -EXTENT, 0]);
-
-    return {
-        'u_matrix': matrix,
-        'u_image': 1,
-        'u_dimension': [stride, stride],
-        'u_zoom': tileID.overscaledZ,
-        'u_unpack': dem.getUnpackVector()
-    };
-};
 
 function getTileLatRange(painter: Painter, tileID: OverscaledTileID) {
     // for scaling the magnitude of a points slope by its latitude
@@ -112,5 +97,4 @@ export {
     hillshadeUniforms,
     hillshadePrepareUniforms,
     hillshadeUniformValues,
-    hillshadeUniformPrepareValues
 };

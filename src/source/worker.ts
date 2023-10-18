@@ -1,7 +1,7 @@
 import {Actor} from '../util/actor';
 import {StyleLayerIndex} from '../style/style_layer_index';
 import {VectorTileWorkerSource} from './vector_tile_worker_source';
-import {RasterDEMTileWorkerSource} from './raster_dem_tile_worker_source';
+// import {RasterDEMTileWorkerSource} from './raster_dem_tile_worker_source';
 import {GeoJSONWorkerSource} from './geojson_worker_source';
 import {plugin as globalRTLTextPlugin} from './rtl_text_plugin';
 import {isWorker} from '../util/util';
@@ -40,11 +40,7 @@ export default class Worker {
             };
         };
     };
-    demWorkerSources: {
-        [_: string]: {
-            [_: string]: RasterDEMTileWorkerSource;
-        };
-    };
+
     referrer: string;
 
     constructor(self: WorkerGlobalScopeInterface) {
@@ -61,7 +57,7 @@ export default class Worker {
 
         // [mapId][sourceType][sourceName] => worker source instance
         this.workerSources = {};
-        this.demWorkerSources = {};
+        // this.demWorkerSources = {};
 
         this.self.registerWorkerSource = (name: string, WorkerSource: {
             new (...args: any): WorkerSource;
@@ -121,9 +117,6 @@ export default class Worker {
         this.getWorkerSource(mapId, params.type, params.source).loadTile(params, callback);
     }
 
-    loadDEMTile(mapId: string, params: WorkerDEMTileParameters, callback: WorkerDEMTileCallback) {
-        this.getDEMWorkerSource(mapId, params.source).loadTile(params, callback);
-    }
 
     reloadTile(mapId: string, params: WorkerTileParameters & {
         type: string;
@@ -143,9 +136,9 @@ export default class Worker {
         this.getWorkerSource(mapId, params.type, params.source).removeTile(params, callback);
     }
 
-    removeDEMTile(mapId: string, params: TileParameters) {
-        this.getDEMWorkerSource(mapId, params.source).removeTile(params);
-    }
+    // removeDEMTile(mapId: string, params: TileParameters) {
+    //     this.getDEMWorkerSource(mapId, params.source).removeTile(params);
+    // }
 
     removeSource(mapId: string, params: {
         source: string;
@@ -242,16 +235,7 @@ export default class Worker {
         return this.workerSources[mapId][type][source];
     }
 
-    getDEMWorkerSource(mapId: string, source: string) {
-        if (!this.demWorkerSources[mapId])
-            this.demWorkerSources[mapId] = {};
 
-        if (!this.demWorkerSources[mapId][source]) {
-            this.demWorkerSources[mapId][source] = new RasterDEMTileWorkerSource();
-        }
-
-        return this.demWorkerSources[mapId][source];
-    }
 }
 
 if (isWorker()) {
