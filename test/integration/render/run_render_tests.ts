@@ -9,7 +9,6 @@ import {globSync} from 'glob';
 import http from 'http';
 import {localizeURLs} from '../lib/localize-urls';
 import maplibregl from '../../../src/index';
-// import type {CanvasSource} from '../../../src/source/canvas_source';
 import type {Map} from '../../../src/ui/map';
 import type {StyleSpecification} from '@maplibre/maplibre-gl-style-spec';
 import type {PointLike} from '../../../src/ui/camera';

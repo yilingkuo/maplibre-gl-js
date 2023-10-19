@@ -11,11 +11,6 @@
     top: 0;
 }
 
-.maplibregl-map:fullscreen {
-    width: 100%;
-    height: 100%;
-}
-
 .maplibregl-ctrl-group button.maplibregl-ctrl-compass {
     touch-action: none;
 }
@@ -204,34 +199,6 @@
 
     .maplibregl-ctrl button.maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon {
         background-image: svg-load("svg/maplibregl-ctrl-zoom-in.svg", fill: #000);
-    }
-}
-
-.maplibregl-ctrl button.maplibregl-ctrl-fullscreen .maplibregl-ctrl-icon {
-    background-image: svg-load("svg/maplibregl-ctrl-fullscreen.svg", fill: #333);
-}
-
-.maplibregl-ctrl button.maplibregl-ctrl-shrink .maplibregl-ctrl-icon {
-    background-image: svg-load("svg/maplibregl-ctrl-shrink.svg");
-}
-
-@media (-ms-high-contrast: active) {
-    .maplibregl-ctrl button.maplibregl-ctrl-fullscreen .maplibregl-ctrl-icon {
-        background-image: svg-load("svg/maplibregl-ctrl-fullscreen.svg", fill: #fff);
-    }
-
-    .maplibregl-ctrl button.maplibregl-ctrl-shrink .maplibregl-ctrl-icon {
-        background-image: svg-load("svg/maplibregl-ctrl-shrink.svg", fill: #fff);
-    }
-}
-
-@media (-ms-high-contrast: black-on-white) {
-    .maplibregl-ctrl button.maplibregl-ctrl-fullscreen .maplibregl-ctrl-icon {
-        background-image: svg-load("svg/maplibregl-ctrl-fullscreen.svg", fill: #000);
-    }
-
-    .maplibregl-ctrl button.maplibregl-ctrl-shrink .maplibregl-ctrl-icon {
-        background-image: svg-load("svg/maplibregl-ctrl-shrink.svg", fill: #000);
     }
 }
 

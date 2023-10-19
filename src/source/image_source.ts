@@ -10,7 +10,6 @@ import {Texture} from '../render/texture';
 import {MercatorCoordinate} from '../geo/mercator_coordinate';
 
 import type {Source} from './source';
-// import type {CanvasSourceSpecification} from './canvas_source';
 import type {Map} from '../ui/map';
 import type {Dispatcher} from '../util/dispatcher';
 import type {Tile} from './tile';
