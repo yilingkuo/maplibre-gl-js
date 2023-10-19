@@ -10,15 +10,14 @@ import {Texture} from '../render/texture';
 import {MercatorCoordinate} from '../geo/mercator_coordinate';
 
 import type {Source} from './source';
-import type {CanvasSourceSpecification} from './canvas_source';
+// import type {CanvasSourceSpecification} from './canvas_source';
 import type {Map} from '../ui/map';
 import type {Dispatcher} from '../util/dispatcher';
 import type {Tile} from './tile';
 import type {Callback} from '../types/callback';
 import type {VertexBuffer} from '../gl/vertex_buffer';
 import type {
-    ImageSourceSpecification,
-    VideoSourceSpecification
+    ImageSourceSpecification
 } from '@maplibre/maplibre-gl-style-spec';
 import {Cancelable} from '../types/cancelable';
 
@@ -110,7 +109,7 @@ export class ImageSource extends Evented implements Source {
     _request: Cancelable;
 
     /** @internal */
-    constructor(id: string, options: ImageSourceSpecification | VideoSourceSpecification | CanvasSourceSpecification, dispatcher: Dispatcher, eventedParent: Evented) {
+    constructor(id: string, options: ImageSourceSpecification, dispatcher: Dispatcher, eventedParent: Evented) {
         super();
         this.id = id;
         this.dispatcher = dispatcher;
@@ -298,7 +297,7 @@ export class ImageSource extends Evented implements Source {
         }
     }
 
-    serialize = (): ImageSourceSpecification | VideoSourceSpecification | CanvasSourceSpecification => {
+    serialize = (): ImageSourceSpecification  => {
         return {
             type: 'image',
             url: this.options.url,

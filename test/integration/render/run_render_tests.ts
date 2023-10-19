@@ -9,7 +9,7 @@ import {globSync} from 'glob';
 import http from 'http';
 import {localizeURLs} from '../lib/localize-urls';
 import maplibregl from '../../../src/index';
-import type {CanvasSource} from '../../../src/source/canvas_source';
+// import type {CanvasSource} from '../../../src/source/canvas_source';
 import type {Map} from '../../../src/ui/map';
 import type {StyleSpecification} from '@maplibre/maplibre-gl-style-spec';
 import type {PointLike} from '../../../src/ui/camera';
@@ -522,16 +522,7 @@ async function getImageFromStyle(styleForTest: StyleWithTestData, page: Page): P
                 map.addLayer(new customLayerImplementations[operation[1]](), operation[2]);
                 map._render();
                 applyOperations(testData, map, operations.slice(1), callback);
-            } else if (operation[0] === 'updateFakeCanvas') {
-                const canvasSource = map.getSource(operation[1]) as CanvasSource;
-                canvasSource.play();
-                // update before pause should be rendered
-                await updateFakeCanvas(window.document, testData.addFakeCanvas.id, operation[2]);
-                canvasSource.pause();
-                // update after pause should not be rendered
-                await updateFakeCanvas(window.document, testData.addFakeCanvas.id, operation[3]);
-                map._render();
-                applyOperations(testData, map, operations.slice(1), callback);
+
             } else if (operation[0] === 'setStyle') {
                 // Disable local ideograph generation (enabled by default) for
                 // consistent local ideograph rendering using fixtures in all runs of the test suite.

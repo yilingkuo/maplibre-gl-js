@@ -1895,7 +1895,6 @@ export class Map extends Camera {
      * @param id - The ID of the source to add. Must not conflict with existing sources.
      * @param source - The source object, conforming to the
      * MapLibre Style Specification's [source definition](https://maplibre.org/maplibre-style-spec/sources) or
-     * {@link CanvasSourceSpecification}.
      * @returns `this`
      * @example
      * ```ts

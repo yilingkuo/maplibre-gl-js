@@ -34,8 +34,6 @@ class StubMap extends Evented {
     setTerrain() {}
 }
 
-
-
 describe('TerrainSourceCache', () => {
     let server: FakeServer;
     let style: Style;
