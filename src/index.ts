@@ -18,7 +18,6 @@ import {Evented} from './util/evented';
 import {config} from './util/config';
 import {Debug} from './util/debug';
 import {isSafari} from './util/util';
-import {setRTLTextPlugin, getRTLTextPluginStatus} from './source/rtl_text_plugin';
 import {WorkerPool} from './util/worker_pool';
 import {prewarm, clearPrewarmedResources} from './util/global_worker_pool';
 import {PerformanceUtils} from './util/performance';
@@ -62,32 +61,6 @@ class MapLibreGL {
     static ImageSource = ImageSource;
     static RasterTileSource = RasterTileSource;
     static VectorTileSource = VectorTileSource;
-    /**
-     * Sets the map's [RTL text plugin](https://www.mapbox.com/mapbox-gl-js/plugins/#mapbox-gl-rtl-text).
-     * Necessary for supporting the Arabic and Hebrew languages, which are written right-to-left.
-     *
-     * @param pluginURL - URL pointing to the Mapbox RTL text plugin source.
-     * @param callback - Called with an error argument if there is an error.
-     * @param lazy - If set to `true`, mapboxgl will defer loading the plugin until rtl text is encountered,
-     * rtl text will then be rendered only after the plugin finishes loading.
-     * @example
-     * ```ts
-     * maplibregl.setRTLTextPlugin('https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.2.3/mapbox-gl-rtl-text.js');
-     * ```
-     * @see [Add support for right-to-left scripts](https://maplibre.org/maplibre-gl-js/docs/examples/mapbox-gl-rtl-text/)
-     */
-    static setRTLTextPlugin = setRTLTextPlugin;
-    /**
-     * Gets the map's [RTL text plugin](https://www.mapbox.com/mapbox-gl-js/plugins/#mapbox-gl-rtl-text) status.
-     * The status can be `unavailable` (i.e. not requested or removed), `loading`, `loaded` or `error`.
-     * If the status is `loaded` and the plugin is requested again, an error will be thrown.
-     *
-     * @example
-     * ```ts
-     * const pluginStatus = maplibregl.getRTLTextPluginStatus();
-     * ```
-     */
-    static getRTLTextPluginStatus = getRTLTextPluginStatus;
     /**
      * Initializes resources like WebWorkers that can be shared across maps to lower load
      * times in some situations. `maplibregl.workerUrl` and `maplibregl.workerCount`, if being

@@ -1,24 +1,19 @@
 import {Actor} from '../util/actor';
 import {StyleLayerIndex} from '../style/style_layer_index';
 import {VectorTileWorkerSource} from './vector_tile_worker_source';
-// import {RasterDEMTileWorkerSource} from './raster_dem_tile_worker_source';
 import {GeoJSONWorkerSource} from './geojson_worker_source';
-import {plugin as globalRTLTextPlugin} from './rtl_text_plugin';
 import {isWorker} from '../util/util';
 
 import type {
     WorkerSource,
     WorkerTileParameters,
-    WorkerDEMTileParameters,
     WorkerTileCallback,
-    WorkerDEMTileCallback,
     TileParameters
 } from '../source/worker_source';
 
 import type {WorkerGlobalScopeInterface} from '../util/web_worker';
 import type {Callback} from '../types/callback';
 import type {LayerSpecification} from '@maplibre/maplibre-gl-style-spec';
-import type {PluginState} from './rtl_text_plugin';
 
 /**
  * The Worker class responsidble for background thread related execution
@@ -66,20 +61,6 @@ export default class Worker {
                 throw new Error(`Worker source with name "${name}" already registered.`);
             }
             this.workerSourceTypes[name] = WorkerSource;
-        };
-
-        // This is invoked by the RTL text plugin when the download via the `importScripts` call has finished, and the code has been parsed.
-        this.self.registerRTLTextPlugin = (rtlTextPlugin: {
-            applyArabicShaping: Function;
-            processBidirectionalText: ((b: string, a: Array<number>) => Array<string>);
-            processStyledBidirectionalText?: ((c: string, b: Array<number>, a: Array<number>) => Array<[string, Array<number>]>);
-        }) => {
-            if (globalRTLTextPlugin.isParsed()) {
-                throw new Error('RTL text plugin already registered.');
-            }
-            globalRTLTextPlugin['applyArabicShaping'] = rtlTextPlugin.applyArabicShaping;
-            globalRTLTextPlugin['processBidirectionalText'] = rtlTextPlugin.processBidirectionalText;
-            globalRTLTextPlugin['processStyledBidirectionalText'] = rtlTextPlugin.processStyledBidirectionalText;
         };
     }
 
@@ -178,25 +159,6 @@ export default class Worker {
         }
     }
 
-    syncRTLPluginState(map: string, state: PluginState, callback: Callback<boolean>) {
-        try {
-            globalRTLTextPlugin.setState(state);
-            const pluginURL = globalRTLTextPlugin.getPluginURL();
-            if (
-                globalRTLTextPlugin.isLoaded() &&
-                !globalRTLTextPlugin.isParsed() &&
-                pluginURL != null // Not possible when `isLoaded` is true, but keeps flow happy
-            ) {
-                this.self.importScripts(pluginURL);
-                const complete = globalRTLTextPlugin.isParsed();
-                const error = complete ? undefined : new Error(`RTL Text Plugin failed to import scripts from ${pluginURL}`);
-                callback(error, complete);
-            }
-        } catch (e) {
-            callback(e.toString());
-        }
-    }
-
     getAvailableImages(mapId: string) {
         let availableImages = this.availableImages[mapId];
 
@@ -234,7 +196,6 @@ export default class Worker {
 
         return this.workerSources[mapId][type][source];
     }
-
 
 }
 

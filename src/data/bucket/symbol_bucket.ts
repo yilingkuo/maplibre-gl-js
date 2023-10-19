@@ -23,7 +23,7 @@ import {ProgramConfigurationSet} from '../program_configuration';
 import {TriangleIndexArray, LineIndexArray} from '../index_array_type';
 import {transformText} from '../../symbol/transform_text';
 import {mergeLines} from '../../symbol/merge_lines';
-import {allowsVerticalWritingMode, stringContainsRTLText} from '../../util/script_detection';
+import {allowsVerticalWritingMode} from '../../util/script_detection';
 import {WritingMode} from '../../symbol/shaping';
 import {loadGeometry} from '../load_geometry';
 import {toEvaluationFeature} from '../evaluation_feature';
@@ -36,7 +36,6 @@ import {getSizeData, MAX_PACKED_SIZE} from '../../symbol/symbol_size';
 import {register} from '../../util/web_worker_transfer';
 import {EvaluationParameters} from '../../style/evaluation_parameters';
 import {Formatted, ResolvedImage} from '@maplibre/maplibre-gl-style-spec';
-import {plugin as globalRTLTextPlugin, getRTLTextPluginStatus} from '../../source/rtl_text_plugin';
 import {mat4} from 'gl-matrix';
 import {getOverlapMode} from '../../style/style_layer/overlap_mode';
 import type {CanonicalTileID} from '../../source/tile_id';
@@ -149,15 +148,6 @@ function addDynamicAttributes(dynamicLayoutVertexArray: StructArray, p: Point, a
     dynamicLayoutVertexArray.emplaceBack(p.x, p.y, angle);
     dynamicLayoutVertexArray.emplaceBack(p.x, p.y, angle);
     dynamicLayoutVertexArray.emplaceBack(p.x, p.y, angle);
-}
-
-function containsRTLText(formattedText: Formatted): boolean {
-    for (const section of formattedText.sections) {
-        if (stringContainsRTLText(section.text)) {
-            return true;
-        }
-    }
-    return false;
 }
 
 export class SymbolBuffers {
@@ -361,7 +351,6 @@ export class SymbolBucket implements Bucket {
     symbolInstanceIndexes: Array<number>;
     writingModes: WritingMode[];
     allowVerticalPlacement: boolean;
-    hasRTLText: boolean;
 
     constructor(options: BucketParameters<SymbolStyleLayer>) {
         this.collisionBoxArray = options.collisionBoxArray;
@@ -373,7 +362,6 @@ export class SymbolBucket implements Bucket {
         this.pixelRatio = options.pixelRatio;
         this.sourceLayerIndex = options.sourceLayerIndex;
         this.hasPattern = false;
-        this.hasRTLText = false;
         this.sortKeyRanges = [];
 
         this.collisionCircleArray = [];
@@ -476,16 +464,8 @@ export class SymbolBucket implements Bucket {
                 // conversion here.
                 const resolvedTokens = layer.getValueAndResolveTokens('text-field', evaluationFeature, canonical, availableImages);
                 const formattedText = Formatted.factory(resolvedTokens);
-                if (containsRTLText(formattedText)) {
-                    this.hasRTLText = true;
-                }
-                if (
-                    !this.hasRTLText || // non-rtl text so can proceed safely
-                    getRTLTextPluginStatus() === 'unavailable' || // We don't intend to lazy-load the rtl text plugin, so proceed with incorrect shaping
-                    this.hasRTLText && globalRTLTextPlugin.isParsed() // Use the rtlText plugin to shape text
-                ) {
-                    text = transformText(formattedText, layer, evaluationFeature);
-                }
+
+                text = transformText(formattedText, layer, evaluationFeature);
             }
 
             let icon: ResolvedImage;
@@ -566,7 +546,7 @@ export class SymbolBucket implements Bucket {
     isEmpty() {
         // When the bucket encounters only rtl-text but the plugin isnt loaded, no symbol instances will be created.
         // In order for the bucket to be serialized, and not discarded as an empty bucket both checks are necessary.
-        return this.symbolInstances.length === 0 && !this.hasRTLText;
+        return this.symbolInstances.length === 0;
     }
 
     uploadPending() {

@@ -20,11 +20,7 @@ import {SourceCache} from '../source/source_cache';
 import {GeoJSONSource} from '../source/geojson_source';
 import {latest as styleSpec, derefLayers as deref, emptyStyle, diff as diffStyles, operations as diffOperations} from '@maplibre/maplibre-gl-style-spec';
 import {getGlobalWorkerPool} from '../util/global_worker_pool';
-import {
-    registerForPluginStateChange,
-    evented as rtlTextPluginEvented,
-    triggerPluginCompletionEvent
-} from '../source/rtl_text_plugin';
+
 import {PauseablePlacement} from './pauseable_placement';
 import {ZoomHistory} from './zoom_history';
 import {CrossTileSymbolIndex} from '../symbol/cross_tile_symbol_index';
@@ -217,7 +213,6 @@ export class Style extends Evented {
     sourceCaches: {[_: string]: SourceCache};
     zoomHistory: ZoomHistory;
     _loaded: boolean;
-    _rtlTextPluginCallback: (a: any) => any;
     _changed: boolean;
     _updatedSources: {[_: string]: 'clear' | 'reload'};
     _updatedLayers: {[_: string]: true};
@@ -235,8 +230,6 @@ export class Style extends Evented {
     pauseablePlacement: PauseablePlacement;
     placement: Placement;
     z: number;
-
-    static registerForPluginStateChange: typeof registerForPluginStateChange;
 
     constructor(map: Map, options: StyleOptions = {}) {
         super();
@@ -261,32 +254,6 @@ export class Style extends Evented {
         this._resetUpdates();
 
         this.dispatcher.broadcast('setReferrer', getReferrer());
-
-        const self = this;
-        this._rtlTextPluginCallback = Style.registerForPluginStateChange((event) => {
-            const state = {
-                pluginStatus: event.pluginStatus,
-                pluginURL: event.pluginURL
-            };
-            self.dispatcher.broadcast('syncRTLPluginState', state, (err, results) => {
-                triggerPluginCompletionEvent(err);
-                if (results) {
-                    const allComplete = results.every((elem) => elem);
-                    if (allComplete) {
-                        for (const id in self.sourceCaches) {
-                            const sourceType = self.sourceCaches[id].getSource().type;
-                            if (sourceType === 'vector' || sourceType === 'geojson') {
-                                // Non-vector sources don't have any symbols buckets to reload when the RTL text plugin loads
-                                // They also load more quickly, so they're more likely to have already displaying tiles
-                                // that would be unnecessarily booted by the plugin load event
-                                self.sourceCaches[id].reload(); // Should be a no-op if the plugin loads before any tiles load
-                            }
-                        }
-                    }
-                }
-
-            });
-        });
 
         this.on('data', (event) => {
             if (event.dataType !== 'source' || event.sourceDataType !== 'metadata') {
@@ -780,7 +747,7 @@ export class Style extends Evented {
             throw new Error(`The type property must be defined, but only the following properties were given: ${Object.keys(source).join(', ')}.`);
         }
 
-        const builtIns = ['vector', 'raster', 'geojson', 'video', 'image'];
+        const builtIns = ['vector', 'raster', 'geojson', 'image'];
         const shouldValidate = builtIns.indexOf(source.type) >= 0;
         if (shouldValidate && this._validate(validateStyle.source, `sources.${id}`, source, null, options)) return;
 
@@ -1458,7 +1425,6 @@ export class Style extends Evented {
             this._spriteRequest.cancel();
             this._spriteRequest = null;
         }
-        rtlTextPluginEvented.off('pluginStateChange', this._rtlTextPluginCallback);
         for (const layerId in this._layers) {
             const layer: StyleLayer = this._layers[layerId];
             layer.setEventedParent(null);
@@ -1730,5 +1696,3 @@ export class Style extends Evented {
         }
     }
 }
-
-Style.registerForPluginStateChange = registerForPluginStateChange;

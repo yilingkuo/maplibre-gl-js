@@ -60,7 +60,7 @@ export class Texture {
         if (resize) {
             this.size = [width, height];
 
-            if (image instanceof HTMLImageElement || image instanceof HTMLCanvasElement || image instanceof HTMLVideoElement || image instanceof ImageData || isImageBitmap(image)) {
+            if (image instanceof HTMLImageElement || image instanceof HTMLCanvasElement || image instanceof ImageData || isImageBitmap(image)) {
                 gl.texImage2D(gl.TEXTURE_2D, 0, this.format, this.format, gl.UNSIGNED_BYTE, image);
             } else {
                 gl.texImage2D(gl.TEXTURE_2D, 0, this.format, width, height, 0, this.format, gl.UNSIGNED_BYTE, (image as DataTextureImage).data);
@@ -68,7 +68,7 @@ export class Texture {
 
         } else {
             const {x, y} = position || {x: 0, y: 0};
-            if (image instanceof HTMLImageElement || image instanceof HTMLCanvasElement || image instanceof HTMLVideoElement || image instanceof ImageData || isImageBitmap(image)) {
+            if (image instanceof HTMLImageElement || image instanceof HTMLCanvasElement || image instanceof ImageData || isImageBitmap(image)) {
                 gl.texSubImage2D(gl.TEXTURE_2D, 0, x, y, gl.RGBA, gl.UNSIGNED_BYTE, image);
             } else {
                 gl.texSubImage2D(gl.TEXTURE_2D, 0, x, y, width, height, gl.RGBA, gl.UNSIGNED_BYTE, (image as DataTextureImage).data);

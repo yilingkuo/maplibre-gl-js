@@ -573,14 +573,6 @@ async function getImageFromStyle(styleForTest: StyleWithTestData, page: Page): P
                 document.body.appendChild(fakeCanvas);
             }
 
-            if (maplibregl.getRTLTextPluginStatus() === 'unavailable') {
-                maplibregl.setRTLTextPlugin(
-                    'https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.2.3/mapbox-gl-rtl-text.min.js',
-                    null,
-                    false // Don't lazy load the plugin
-                );
-            }
-
             const map = new maplibregl.Map({
                 container: 'map',
                 style,

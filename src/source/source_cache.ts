@@ -1036,5 +1036,5 @@ function compareTileId(a: OverscaledTileID, b: OverscaledTileID): number {
 }
 
 function isRasterType(type) {
-    return type === 'raster' || type === 'image' || type === 'video';
+    return type === 'raster' || type === 'image';
 }

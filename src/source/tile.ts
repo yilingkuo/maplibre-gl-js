@@ -11,7 +11,6 @@ import {browser} from '../util/browser';
 import {toEvaluationFeature} from '../data/evaluation_feature';
 import {EvaluationParameters} from '../style/evaluation_parameters';
 import {SourceFeatureState} from '../source/source_state';
-import {lazyLoadRTLTextPlugin} from './rtl_text_plugin';
 
 const CLOCK_SKEW_RETRY_TIMEOUT = 30000;
 
@@ -92,7 +91,6 @@ export class Tile {
 
     symbolFadeHoldUntil: number;
     hasSymbolBuckets: boolean;
-    hasRTLText: boolean;
     dependencies: any;
     rtt: Array<{id: number; stamp: number}>;
     rttCoords: {[_:string]: string};
@@ -110,7 +108,6 @@ export class Tile {
         this.expirationTime = null;
         this.queryPadding = 0;
         this.hasSymbolBuckets = false;
-        this.hasRTLText = false;
         this.dependencies = {};
         this.rtt = [];
         this.rttCoords = {};
@@ -190,20 +187,6 @@ export class Tile {
                     bucket.justReloaded = true;
                 } else {
                     break;
-                }
-            }
-        }
-
-        this.hasRTLText = false;
-        if (this.hasSymbolBuckets) {
-            for (const id in this.buckets) {
-                const bucket = this.buckets[id];
-                if (bucket instanceof SymbolBucket) {
-                    if (bucket.hasRTLText) {
-                        this.hasRTLText = true;
-                        lazyLoadRTLTextPlugin();
-                        break;
-                    }
                 }
             }
         }

@@ -209,34 +209,4 @@ describe('SymbolBucket', () => {
         // true SDF and false SDF in same bucket should trigger warning
         expect(spy).toHaveBeenCalledTimes(1);
     });
-
-    test('SymbolBucket detects rtl text', () => {
-        const rtlBucket = bucketSetup('مرحبا');
-        const ltrBucket = bucketSetup('hello');
-        const options = {iconDependencies: {}, glyphDependencies: {}} as PopulateParameters;
-        rtlBucket.populate([{feature} as IndexedFeature], options, undefined as any);
-        ltrBucket.populate([{feature} as IndexedFeature], options, undefined as any);
-
-        expect(rtlBucket.hasRTLText).toBeTruthy();
-        expect(ltrBucket.hasRTLText).toBeFalsy();
-    });
-
-    // Test to prevent symbol bucket with rtl from text being culled by worker serialization.
-    test('SymbolBucket with rtl text is NOT empty even though no symbol instances are created', () => {
-        const rtlBucket = bucketSetup('مرحبا');
-        const options = {iconDependencies: {}, glyphDependencies: {}} as PopulateParameters;
-        rtlBucket.createArrays();
-        rtlBucket.populate([{feature} as IndexedFeature], options, undefined as any);
-
-        expect(rtlBucket.isEmpty()).toBeFalsy();
-        expect(rtlBucket.symbolInstances).toHaveLength(0);
-    });
-
-    test('SymbolBucket detects rtl text mixed with ltr text', () => {
-        const mixedBucket = bucketSetup('مرحبا translates to hello');
-        const options = {iconDependencies: {}, glyphDependencies: {}} as PopulateParameters;
-        mixedBucket.populate([{feature} as IndexedFeature], options, undefined as any);
-
-        expect(mixedBucket.hasRTLText).toBeTruthy();
-    });
 });

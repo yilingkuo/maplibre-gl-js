@@ -4,7 +4,6 @@ import {
     charInComplexShapingScript
 } from '../util/script_detection';
 import {verticalizePunctuation} from '../util/verticalize_punctuation';
-import {plugin as rtlTextPlugin} from '../source/rtl_text_plugin';
 import ONE_EM from './one_em';
 import {warnOnce} from '../util/util';
 
@@ -268,40 +267,8 @@ function shapeText(
 
     let lines: Array<TaggedString>;
 
-    const {processBidirectionalText, processStyledBidirectionalText} = rtlTextPlugin;
-    if (processBidirectionalText && logicalInput.sections.length === 1) {
-        // Bidi doesn't have to be style-aware
-        lines = [];
-        const untaggedLines =
-            processBidirectionalText(logicalInput.toString(),
-                determineLineBreaks(logicalInput, spacing, maxWidth, glyphMap, imagePositions, symbolPlacement, layoutTextSize));
-        for (const line of untaggedLines) {
-            const taggedLine = new TaggedString();
-            taggedLine.text = line;
-            taggedLine.sections = logicalInput.sections;
-            for (let i = 0; i < line.length; i++) {
-                taggedLine.sectionIndex.push(0);
-            }
-            lines.push(taggedLine);
-        }
-    } else if (processStyledBidirectionalText) {
-        // Need version of mapbox-gl-rtl-text with style support for combining RTL text
-        // with formatting
-        lines = [];
-        const processedLines =
-            processStyledBidirectionalText(logicalInput.text,
-                logicalInput.sectionIndex,
-                determineLineBreaks(logicalInput, spacing, maxWidth, glyphMap, imagePositions, symbolPlacement, layoutTextSize));
-        for (const line of processedLines) {
-            const taggedLine = new TaggedString();
-            taggedLine.text = line[0];
-            taggedLine.sectionIndex = line[1];
-            taggedLine.sections = logicalInput.sections;
-            lines.push(taggedLine);
-        }
-    } else {
-        lines = breakLines(logicalInput, determineLineBreaks(logicalInput, spacing, maxWidth, glyphMap, imagePositions, symbolPlacement, layoutTextSize));
-    }
+    // eslint-disable-next-line prefer-const
+    lines = breakLines(logicalInput, determineLineBreaks(logicalInput, spacing, maxWidth, glyphMap, imagePositions, symbolPlacement, layoutTextSize));
 
     const positionedLines = [];
     const shaping = {

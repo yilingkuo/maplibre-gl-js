@@ -251,27 +251,6 @@ describe('expiring tiles', () => {
 
 });
 
-describe('rtl text detection', () => {
-    test('Tile#hasRTLText is true when a tile loads a symbol bucket with rtl text', () => {
-        const tile = new Tile(new OverscaledTileID(1, 0, 1, 1, 1), undefined);
-        // Create a stub symbol bucket
-        const symbolBucket = createSymbolBucket('test', 'Test', 'test', new CollisionBoxArray());
-        // symbolBucket has not been populated yet so we force override the value in the stub
-        symbolBucket.hasRTLText = true;
-        tile.loadVectorData(
-            createVectorData({rawTileData: createRawTileData(), buckets: [symbolBucket]}),
-            createPainter({
-                getLayer() {
-                    return symbolBucket.layers[0];
-                }
-            })
-        );
-
-        expect(tile.hasRTLText).toBeTruthy();
-    });
-
-});
-
 function createRawTileData() {
     return fs.readFileSync(path.join(__dirname, '../../test/unit/assets/mbsv5-6-18-23.vector.pbf'));
 }
